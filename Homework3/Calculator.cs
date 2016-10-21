@@ -10,20 +10,23 @@ namespace Homework3 {
             var results = new List<long>();
             var numbersToCheck = new Queue<long>();
 
-            StartComputationThreads(results, numbersToCheck);
 
-            var progressMonitor = new ProgressMonitor(results);
-
-            new Thread(progressMonitor.Run) {IsBackground = true}.Start();
-            
-            foreach (var value in reader.ReadIntegers()) {
+            foreach (var value in reader.ReadIntegers())
+            {
                 numbersToCheck.Enqueue(value);
             }
-            
+
+
+            StartComputationThreads(results, numbersToCheck);
+
+           // var progressMonitor = new ProgressMonitor(results);
+
+           // new Thread(progressMonitor.Run) {IsBackground = true}.Start();
+
             while (numbersToCheck.Count > 0) {
                 Thread.Sleep(100); // wait for the computation to complete.
             }
-            Console.WriteLine("{0} of the numbers were prime", progressMonitor.TotalCount);
+          //  Console.WriteLine("{0} of the numbers were prime", progressMonitor.TotalCount);
         }
 
         private static void StartComputationThreads(List<long> results, Queue<long> numbersToCheck) {
@@ -32,7 +35,7 @@ namespace Homework3 {
         }
         
         private static List<Thread> CreateThreads(List<long> results, Queue<long> numbersToCheck) {
-            var threadCount = Environment.ProcessorCount*2;
+            var threadCount = 1;
 
             Console.WriteLine("Using {0} compute threads and 1 I/O thread", threadCount);
 

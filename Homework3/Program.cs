@@ -73,6 +73,6 @@ namespace Homework3 {
 
     static class Constants {
         public const long LowerBound = 1000000;
-        public const long UpperBound = 5000000;
+        public const long UpperBound = 1100000;
     }
 }

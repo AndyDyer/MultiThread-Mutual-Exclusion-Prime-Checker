@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Homework3 {
     internal class IsNumberPrimeCalculator {
@@ -12,27 +13,37 @@ namespace Homework3 {
         }
 
         public void CheckIfNumbersArePrime() {
+            int i = 0;
+            int j = 0;
             while (true) {
+                j++;
                 var numberToCheck = _numbersToCheck.Dequeue();
                 if (IsNumberPrime(numberToCheck)) {
+                    i++;
                     _primeNumbers.Add(numberToCheck);
+                }
+                if (_numbersToCheck.Count == 0)
+                {
+                    Console.WriteLine("This is how many hits: " + i + "    " + j);
+                    break;
                 }
             }
         }
 
         private bool IsNumberPrime(long numberWeAreChecking) {
-            const long firstNumberToCheck = 3;
-
-            if (numberWeAreChecking % 2 == 0) {
-                return false;
-            }
-            var lastNumberToCheck = Math.Sqrt(numberWeAreChecking);
-            for (var currentDivisor = firstNumberToCheck; currentDivisor < lastNumberToCheck; currentDivisor += 2) {
-                if (numberWeAreChecking % currentDivisor == 0) {
-                    return false;
+            int i, flag = 0;
+            for (i = 2; i <= numberWeAreChecking / 2; ++i)
+            {
+                if (numberWeAreChecking % i == 0)
+                {
+                    flag = 1;
+                    break;
                 }
             }
-            return true;
+            if (flag == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

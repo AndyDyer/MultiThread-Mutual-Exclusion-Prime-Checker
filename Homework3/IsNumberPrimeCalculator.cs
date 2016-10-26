@@ -6,44 +6,81 @@ namespace Homework3 {
     internal class IsNumberPrimeCalculator {
         private readonly ICollection<long> _primeNumbers;
         private readonly Queue<long> _numbersToCheck;
+        SpinLock _myLock;
+        bool _gotLock;
 
-        public IsNumberPrimeCalculator(ICollection<long> primeNumbers, Queue<long> numbersToCheck) {
+        public IsNumberPrimeCalculator(ICollection<long> primeNumbers, Queue<long> numbersToCheck, SpinLock myLock, bool gotLock) {
             _primeNumbers = primeNumbers;
             _numbersToCheck = numbersToCheck;
+            _myLock = myLock;
+            _gotLock = gotLock;
         }
-
         public void CheckIfNumbersArePrime() {
-            int i = 0;
-            int j = 0;
+            long numberToCheck = 0;
             while (true) {
-                j++;
-                var numberToCheck = _numbersToCheck.Dequeue();
+                _gotLock = false;
+                try
+                {
+                    _myLock.Enter(ref _gotLock);
+                    try
+                    {
+                        numberToCheck = _numbersToCheck.Dequeue();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("DeQueue Exception:  " + e);
+                        break;
+                    }
+              
+                }
+                finally
+                {
+                    if (_gotLock) {
+                        _myLock.Exit();
+                    }
+                }
                 if (IsNumberPrime(numberToCheck)) {
-                    i++;
-                    _primeNumbers.Add(numberToCheck);
+
+                    _gotLock = false;
+                    try
+                    {
+                        _myLock.Enter(ref _gotLock);
+                        _primeNumbers.Add(numberToCheck);
+                    }
+                    finally
+                    {
+                        if (_gotLock)
+                        {
+                            _myLock.Exit();
+                        }
+                    }
                 }
                 if (_numbersToCheck.Count == 0)
                 {
-                    Console.WriteLine("This is how many hits: " + i + "    " + j);
                     break;
                 }
             }
         }
 
         private bool IsNumberPrime(long numberWeAreChecking) {
-            int i, flag = 0;
-            for (i = 2; i <= numberWeAreChecking / 2; ++i)
+            const int firstNumberToCheck = 5;
+
+            if (numberWeAreChecking % 2 == 0 || numberWeAreChecking % 3 == 0)
             {
-                if (numberWeAreChecking % i == 0)
+                return false;
+            }
+            else
+            {
+                int lastNumberToCheck = (int) Math.Sqrt(numberWeAreChecking);
+                for (int currentDivisor = firstNumberToCheck; currentDivisor < lastNumberToCheck; currentDivisor += 2)
                 {
-                    flag = 1;
-                    break;
+                    if (numberWeAreChecking % currentDivisor == 0)
+                    {
+                        return false;
+                    } 
                 }
             }
-            if (flag == 0)
-                return true;
-            else
-                return false;
+            return true;
         }
     }
 }

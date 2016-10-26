@@ -17,7 +17,6 @@ namespace Homework3 {
                 numbersToCheck.Enqueue(value);
             }
 
-            Console.WriteLine(numbersToCheck.Count);
 
             StartComputationThreads(results, numbersToCheck, myLock, gotLock);
 
@@ -28,7 +27,8 @@ namespace Homework3 {
             while (numbersToCheck.Count > 0) {
                 Thread.Sleep(100); // wait for the computation to complete.
             }
-         Console.WriteLine("{0} of the numbers were prime", progressMonitor.TotalCount);
+            Thread.Sleep(100);
+            Console.WriteLine("{0} of the numbers were prime", progressMonitor.TotalCount);
         }
 
         private static void StartComputationThreads(List<long> results, Queue<long> numbersToCheck, SpinLock myLock, bool gotLock) {

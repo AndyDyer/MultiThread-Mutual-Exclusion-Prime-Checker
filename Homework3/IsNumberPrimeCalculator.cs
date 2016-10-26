@@ -1,13 +1,18 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
+
 namespace Homework3 {
+
     internal class IsNumberPrimeCalculator {
         private readonly ICollection<long> _primeNumbers;
         private readonly Queue<long> _numbersToCheck;
         SpinLock _myLock;
         bool _gotLock;
+        private static Mutex mut = new Mutex();
+
 
         public IsNumberPrimeCalculator(ICollection<long> primeNumbers, Queue<long> numbersToCheck, SpinLock myLock, bool gotLock) {
             _primeNumbers = primeNumbers;
@@ -22,16 +27,13 @@ namespace Homework3 {
                 try
                 {
                     _myLock.Enter(ref _gotLock);
-                    try
+                    if (_numbersToCheck.Count > 0)
                     {
                         numberToCheck = _numbersToCheck.Dequeue();
-                    }
-                    catch (Exception e)
+                    } else
                     {
-                        Console.WriteLine("DeQueue Exception:  " + e);
                         break;
                     }
-              
                 }
                 finally
                 {
@@ -39,6 +41,8 @@ namespace Homework3 {
                         _myLock.Exit();
                     }
                 }
+               
+
                 if (IsNumberPrime(numberToCheck)) {
 
                     _gotLock = false;

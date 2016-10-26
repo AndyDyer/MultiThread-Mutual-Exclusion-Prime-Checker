@@ -20,9 +20,9 @@ namespace Homework3 {
 
                 _results.Clear(); // clear out the current primes to save some memory
 
-                /*if (currentcount > 0) {
+                if (currentcount > 0) {
                     Console.WriteLine("{0} primes found so far", TotalCount);
-                }*/
+                }
             }
         }
     }

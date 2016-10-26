@@ -17,6 +17,7 @@ namespace Homework3 {
                 numbersToCheck.Enqueue(value);
             }
 
+            Console.WriteLine(numbersToCheck.Count);
 
             StartComputationThreads(results, numbersToCheck, myLock, gotLock);
 

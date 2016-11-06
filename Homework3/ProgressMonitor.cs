@@ -15,7 +15,7 @@ namespace Homework3 {
             while (true) {
                 Thread.Sleep(100); // wait for 1/10th of a second
 
-                lock (_results)
+                lock (_results) // may be redundant./ 
                 {
                     if (_results.Count == 0) break;
                     TotalCount += _results.Count;

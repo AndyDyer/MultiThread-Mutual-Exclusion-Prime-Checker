@@ -17,7 +17,7 @@ namespace Homework3 {
         public void CheckIfNumbersArePrime() {
             long numberToCheck = 0;
             while (true) {
-                lock (_numbersToCheck)
+                lock (_numbersToCheck)  // stops any thread from entering the numbers to check queue if occupied. 
                 {
                     if (_numbersToCheck.Count > 0)
                     {
@@ -25,7 +25,7 @@ namespace Homework3 {
                         if (IsNumberPrime(numberToCheck))
                         {
 
-                            lock (_primeNumbers)
+                            lock (_primeNumbers) // stops any thread from entering the queue to add a prime if its already occupied. 
                             {
                                 _primeNumbers.Add(numberToCheck);
                             }
